@@ -12,4 +12,9 @@ public interface UserService {
 
     UserProfile getUserById(Long id);
 
+    UserProfile getUserByEmail(String email);
+    UserDto editUserByEmail(String email, UserDto dto);
+    void deleteUserByEmail(String email);
+    java.util.List<UserProfile> getAllUsers();
+
 }

@@ -21,6 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
     List<User> findAll();
     Optional<User> findById(Long id);
+    Optional<User> findByEmail(String email);
+    void deleteByEmail(String email);
 //    @Query(value = "Select u.id,u.user_name, u.email,u.create_at" +
 //            "From user u " +
 //            "WHERE u.create_at = " +

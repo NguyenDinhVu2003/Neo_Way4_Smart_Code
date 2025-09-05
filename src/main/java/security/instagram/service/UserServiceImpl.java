@@ -16,8 +16,10 @@ import security.instagram.utils.exception.InvalidRequestException;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author ket_ein17
@@ -72,5 +74,45 @@ public class UserServiceImpl implements UserService {
     private static boolean isNull(Object o){
         return Objects.isNull(o);
     }
-}
 
+    public UserProfile getUserByEmail(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new InvalidRequestException(LocalDateTime.now(), "User not found", String.format("No user with email: %s", email), HttpStatus.NOT_FOUND);
+        }
+        return userMapper.showProfile(userOpt.get());
+    }
+
+    public UserDto editUserByEmail(String email, UserDto dto) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new InvalidRequestException(LocalDateTime.now(), "User not found", String.format("No user with email: %s", email), HttpStatus.NOT_FOUND);
+        }
+        User user = userOpt.get();
+        if (dto.getUsername() != null) user.setUsername(dto.getUsername());
+        if (dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
+        if (dto.getLastName() != null) user.setLastName(dto.getLastName());
+        if (dto.getPassword() != null) user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        User savedUser = userRepository.save(user);
+        dto.setUserId(savedUser.getId());
+        dto.setPassword(null);
+        dto.setConfirmPassword(null);
+        return dto;
+    }
+
+    public void deleteUserByEmail(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            throw new InvalidRequestException(LocalDateTime.now(), "User not found", String.format("No user with email: %s", email), HttpStatus.NOT_FOUND);
+        }
+        userRepository.delete(userOpt.get());
+    }
+
+    @Override
+    public List<UserProfile> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::showProfile)
+                .collect(Collectors.toList());
+    }
+}
