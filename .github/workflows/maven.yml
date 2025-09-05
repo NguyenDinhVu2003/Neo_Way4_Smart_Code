@@ -26,13 +26,13 @@ jobs:
       - name: Update dependency graph
         run: mvn com.github.ferstl:depgraph-maven-plugin:4.0.1:graph -DgraphFormat=json
 
-      - uses: mr-smithers-excellent/docker-build-push@v6
-        name: Build & push Docker image
-        with:
-          image: nguyendinhvu/cicd_github_action
-          tags: v1, latest
-          registry: docker.io
-          dockerfile: Dockerfile
-          directory: .
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+#      - uses: mr-smithers-excellent/docker-build-push@v6
+#        name: Build & push Docker image
+#        with:
+#          image: nguyendinhvu/cicd_github_action
+#          tags: v1, latest
+#          registry: docker.io
+#          dockerfile: Dockerfile
+#          directory: .
+#          username: ${{ secrets.DOCKER_USERNAME }}
+#          password: ${{ secrets.DOCKER_PASSWORD }}
