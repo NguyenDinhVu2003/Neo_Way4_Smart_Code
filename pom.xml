@@ -130,6 +130,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>Smart_code_CICD</finalName>
     </build>
 
 </project>
