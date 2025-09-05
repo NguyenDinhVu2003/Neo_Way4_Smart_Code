@@ -12,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import security.instagram.config.filter.JwtAuthenticationFilter;
 import security.instagram.config.token.TokenUtils;
+import security.instagram.config.user_auth.CustomAuthEntryPoint;
 import security.instagram.config.user_auth.MyUsernamePasswordAuthenticationFilter;
 import security.instagram.config.user_auth.MyUsernamePasswordAuthenticationProvider;
 
@@ -27,6 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenUtils tokenUtils;
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired private CustomAuthEntryPoint customAuthEntryPoint;
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui/index.html",
@@ -47,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(customAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**","/api-docs/**","/v1/auth/**").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and().exceptionHandling().authenticationEntryPoint(customAuthEntryPoint);
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
