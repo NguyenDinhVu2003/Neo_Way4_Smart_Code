@@ -39,3 +39,11 @@ jwt:
   secret-key: thisissecretkeyofkitee@additionalwordtoget256bitsenough
   access-token-validity: 3600
   refresh-token-validity: 86400
+
+  management:
+    metrics:
+      enable:
+        system: false
+        process: false
+        jvm: false
+
