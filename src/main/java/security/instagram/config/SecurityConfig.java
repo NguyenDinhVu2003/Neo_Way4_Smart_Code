@@ -46,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**","/api-docs/**","/v1/auth/**").permitAll()
+                .antMatchers("/swagger-ui/**","/api-docs/**","/v1/auth/**","/v1/chat/**").permitAll()
                 .anyRequest().authenticated();
     }
     @Override
