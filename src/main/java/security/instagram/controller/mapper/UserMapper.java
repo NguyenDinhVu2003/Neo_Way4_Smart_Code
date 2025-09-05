@@ -26,12 +26,13 @@ public class UserMapper {
 
     public UserProfile showProfile(User user){
 //        UserAdditionalInfo userAdditionalInfo = user.getInfo();
+        String dateOfBirthStr = user.getDateOfBirth() != null ? user.getDateOfBirth().toString() : null; // null-safe
         UserProfile userProfile = UserProfile.builder()
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
-                .dateOfBirth(user.getDateOfBirth().toString())
+                .dateOfBirth(dateOfBirthStr)
 //                .gender(user.getGender())
 //                .accountType(user.getAccountType())
                 .avatarId(user.getAvatarId())

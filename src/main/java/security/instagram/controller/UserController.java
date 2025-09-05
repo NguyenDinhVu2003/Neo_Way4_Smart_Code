@@ -21,19 +21,19 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/email/{email}")
+    @GetMapping("/email/{email:.+}")
     public ResponseEntity<UserProfile> getUserByEmail(@PathVariable String email) {
         UserProfile user = userService.getUserByEmail(email);
         return ResponseEntity.ok(user);
     }
 
-    @PutMapping("/email/{email}")
+    @PutMapping("/email/{email:.+}")
     public ResponseEntity<UserDto> editUserByEmail(@PathVariable String email, @RequestBody UserDto dto) {
         UserDto updatedUser = userService.editUserByEmail(email, dto);
         return ResponseEntity.ok(updatedUser);
     }
 
-    @DeleteMapping("/email/{email}")
+    @DeleteMapping("/email/{email:.+}")
     public ResponseEntity<Void> deleteUserByEmail(@PathVariable String email) {
         userService.deleteUserByEmail(email);
         return ResponseEntity.noContent().build();
