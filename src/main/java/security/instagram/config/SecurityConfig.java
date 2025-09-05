@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(customAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 //.addFilterAfter(decentralizationFilter, DecentralizationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/swagger-ui/**","/api-docs/**","/v1/auth/**").permitAll()
+                .antMatchers("/swagger-ui/**","/api-docs/**","/v1/auth/**","/v1/chat/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(customAuthEntryPoint);
     }
