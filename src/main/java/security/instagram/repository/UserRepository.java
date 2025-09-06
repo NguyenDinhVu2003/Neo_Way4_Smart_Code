@@ -22,6 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findAll();
     Optional<User> findById(Long id);
     Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
     void deleteByEmail(String email);
 //    @Query(value = "Select u.id,u.user_name, u.email,u.create_at" +
 //            "From user u " +
