@@ -21,9 +21,9 @@ public class PermissionService {
                 return true;
             case PRIVATE:
                 return doc.getOwner().getId().equals(requester.getId());
-//            case GROUP:
-//                return doc.getGroup() != null &&
-//                        groupMembers.existsByGroupAndUser(doc.getGroup().getId(), requester.getId());
+            case GROUP:
+                return doc.getGroup() != null &&
+                        groupMembers.existsByGroupAndUser(doc.getGroup(), requester.getId());
             default:
                 return false;
         }
