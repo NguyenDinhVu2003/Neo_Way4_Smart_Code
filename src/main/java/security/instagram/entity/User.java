@@ -24,7 +24,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
     private String firstName;
     private String lastName;
@@ -45,5 +45,8 @@ public class User implements Serializable {
     private Date modifyAt;
     public String getUsername(){
         return username;
+    }
+    public String getName(){
+        return firstName + " " + lastName;
     }
 }
