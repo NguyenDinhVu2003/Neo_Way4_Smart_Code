@@ -9,6 +9,6 @@ import security.instagram.entity.Document;
 
 import java.util.UUID;
 
-public interface CommentRepository extends JpaRepository<Comment, UUID> {
+public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByDocumentAndIsDeletedFalseOrderByCreatedAtAsc(Document document, Pageable pageable);
 }
