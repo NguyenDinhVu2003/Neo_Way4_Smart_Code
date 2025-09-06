@@ -10,12 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import security.instagram.config.filter.DecentralizationFilter;
 import security.instagram.config.filter.JwtAuthenticationFilter;
 import security.instagram.config.token.TokenUtils;
 import security.instagram.config.user_auth.CustomAuthEntryPoint;
 import security.instagram.config.user_auth.MyUsernamePasswordAuthenticationFilter;
-import security.instagram.config.user_auth.MyUsernamePasswordAuthenticationProvider;
 
 /**
  * @author ket_ein17
@@ -30,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired private CustomAuthEntryPoint customAuthEntryPoint;
-//    @Autowired private DecentralizationFilter decentralizationFilter;
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui/index.html",
@@ -49,7 +46,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(customAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                //.addFilterAfter(decentralizationFilter, DecentralizationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**","/api-docs/**","/v1/auth/**","/v1/chat/**").permitAll()
                 .anyRequest().authenticated()
