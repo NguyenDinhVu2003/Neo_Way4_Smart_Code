@@ -34,7 +34,7 @@ public class DocumentUploadController {
 
     @PostMapping("/uploadFile")
     public ResponseEntity<?> handleFileUploadLocal(@RequestParam("file") MultipartFile multipartFile, HttpServletRequest request) throws IOException, GeneralSecurityException {
-        driverService.saveFile(multipartFile);
-        return ResponseBuilder.success("Success","200", request);
+        String filePath = driverService.saveFile(multipartFile);
+        return ResponseBuilder.success(filePath,"200", request);
     }
 }

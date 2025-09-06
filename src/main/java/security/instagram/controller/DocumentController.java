@@ -1,5 +1,7 @@
 package security.instagram.controller;
 
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 import security.instagram.dto.document.DocumentCreateRequest;
 import security.instagram.dto.document.DocumentResponse;
 import security.instagram.dto.document.DocumentUpdateRequest;

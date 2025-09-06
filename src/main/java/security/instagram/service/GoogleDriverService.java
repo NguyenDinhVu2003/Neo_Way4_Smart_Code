@@ -1,28 +1,28 @@
 package security.instagram.service;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.FileContent;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.GeneralSecurityException;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 public class GoogleDriverService {
-
-    private static final GsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private static final String SERVICE_ACOUNT_KEY_PATH = getPathToGoodleCredentials();
+    private static final Set<String> ALLOWED_CONTENT_TYPES = new HashSet<>(Arrays.asList(
+            "application/msword",                     // .doc
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+            "application/pdf",                        // .pdf
+            "image/jpeg",                             // .jpg/.jpeg
+            "image/png",                              // .png
+            "image/gif"                               // .gif
+    ));
 
     private static String getPathToGoodleCredentials() {
         String currentDirectory = System.getProperty("user.dir");
@@ -32,6 +32,10 @@ public class GoogleDriverService {
 
     private static final String UPLOAD_DIR = "uploads/";
     public String saveFile(MultipartFile multipartFile) throws IOException {
+        String contentType = multipartFile.getContentType();
+        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
+            throw new IllegalArgumentException("Invalid file type. Only .doc, .docx, .pdf, .jpg, .png, .gif files are allowed.");
+        }
         File dir = new File(UPLOAD_DIR);
         if (!dir.exists()) {
             dir.mkdirs();
