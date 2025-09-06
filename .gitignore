@@ -30,6 +30,6 @@ build/
 !**/src/test/**/build/
 /logs/
 /log_daily/
-
+/uploads/
 ### VS Code ###
 .vscode/
