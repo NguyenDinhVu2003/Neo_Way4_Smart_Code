@@ -8,7 +8,7 @@ import security.instagram.entity.User;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RatingRepository extends JpaRepository<Rating, UUID> {
+public interface RatingRepository extends JpaRepository<Rating, Long> {
     Optional<Rating> findByDocumentAndUser(Document document, User user);
     long countByDocument(Document document);
 }

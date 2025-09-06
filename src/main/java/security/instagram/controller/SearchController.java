@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import security.instagram.config.auth.BearerContextHolder;
 import security.instagram.dto.common.PagedResponse;
 import security.instagram.dto.document.DocumentResponse;
 import security.instagram.entity.Document;
@@ -32,7 +33,6 @@ public class SearchController {
 
     @GetMapping("/search")
     public ResponseEntity<PagedResponse<DocumentResponse>> search(
-            @AuthenticationPrincipal UserDetails principal,
             @RequestParam(required = false) String q,
             @RequestParam(required = false) List<String> tags, // TODO: filter by tags
             @RequestParam(required = false) String groupId,
@@ -41,7 +41,7 @@ public class SearchController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
-        User me = users.findByUsername(principal.getUsername()).orElseThrow();
+        User me = users.findByUsername(BearerContextHolder.getContext().getEmail()).orElseThrow();
         // NOTE: For MVP, we fetch and filter in memory. Replace with Specification for production.
         Pageable pageable = PageRequest.of(Math.max(0, page - 1), Math.min(100, size), Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Document> all = new PageImpl<>(documents.findAll()); // naive
@@ -50,7 +50,7 @@ public class SearchController {
         List<Document> filtered = all.getContent().stream()
                 .filter(d -> !Boolean.TRUE.equals(d.getIsDeleted()))
                 .filter(d -> q == null || (contains(d.getTitle(), q) || contains(d.getSummary(), q) || contains(d.getDescription(), q)))
-                .filter(d -> groupId == null || (d.getGroup() != null && d.getGroup().getId().toString().equals(groupId)))
+                .filter(d -> groupId == null || (d.getGroup() != null && d.getGroup().toString().equals(groupId)))
                 .filter(d -> from == null || !d.getCreatedAt().isBefore(from))
                 .filter(d -> to == null || !d.getCreatedAt().isAfter(to))
                 .filter(d -> perms.canView(d, me))

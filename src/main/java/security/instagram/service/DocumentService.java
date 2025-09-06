@@ -22,9 +22,7 @@ import security.instagram.utils.exception.ApiException;
 import security.instagram.utils.exception.ErrorCode;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -43,7 +41,9 @@ public class DocumentService {
             if (StringUtils.isBlank(req.getGroupId())) {
                 throw new ApiException(ErrorCode.VALIDATION_ERROR, "groupId is required for GROUP visibility");
             }
-            group = groups.findById(UUID.fromString(req.getGroupId()))
+            Long gid;
+            try { gid = Long.parseLong(req.getGroupId()); } catch (NumberFormatException ex) { throw new ApiException(ErrorCode.VALIDATION_ERROR, "groupId must be a number"); }
+            group = groups.findById(gid)
                     .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND, "Group not found"));
         }
         Set<Tag> tagEntities = new HashSet<>();
@@ -73,7 +73,7 @@ public class DocumentService {
                 break;
             default:
                 throw new ApiException(ErrorCode.VALIDATION_ERROR, "fileType is not allowed");
-        };
+        }
         Document d = Document.builder()
                 .title(req.getTitle())
                 .description(req.getDescription())
@@ -82,25 +82,25 @@ public class DocumentService {
                 .fileType(ft)
                 .fileSizeBytes(req.getFileSizeBytes())
                 .visibility(vis)
-                .group(group)
+                .group(group.getId())
                 .owner(owner)
                 .aiSummaryStatus(req.getAi() != null && req.getAi().isAutoSummarize() ? AiSummaryStatus.PENDING : null)
                 .tags(tagEntities)
                 .build();
         documents.save(d);
-        // TODO: enqueue AI summarize / suggest tags if requested
         return HomeService.Mapper.toDocResponse(d);
     }
 
     @Transactional(readOnly = true)
-    public DocumentResponse get(UUID id, User me) {
+    public DocumentResponse get(Long id, User me) {
         Document d = documents.findById(id).orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND, "Document not found"));
         if (!perms.canView(d, me)) throw new ApiException(ErrorCode.FORBIDDEN, "No access");
         return HomeService.Mapper.toDocResponse(d);
+
     }
 
     @Transactional
-    public DocumentResponse update(UUID id, DocumentUpdateRequest req, User me) {
+    public DocumentResponse update(Long id, DocumentUpdateRequest req, User me) {
         Document d = documents.findById(id).orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND, "Document not found"));
         if (!perms.canModify(d, me)) throw new ApiException(ErrorCode.FORBIDDEN, "Only owner can modify");
         if (req.getTitle() != null) d.setTitle(StringUtils.abbreviate(req.getTitle(), 256));
@@ -111,9 +111,11 @@ public class DocumentService {
             d.setVisibility(vis);
             if (vis == Visibility.GROUP) {
                 if (StringUtils.isBlank(req.getGroupId())) throw new ApiException(ErrorCode.VALIDATION_ERROR, "groupId required");
-                Group g = groups.findById(UUID.fromString(req.getGroupId()))
+                Long gid;
+                try { gid = Long.parseLong(req.getGroupId()); } catch (NumberFormatException ex) { throw new ApiException(ErrorCode.VALIDATION_ERROR, "groupId must be a number"); }
+                Group g = groups.findById(gid)
                         .orElseThrow(() -> new ApiException(ErrorCode.NOT_FOUND, "Group not found"));
-                d.setGroup(g);
+                d.setGroup(g.getId());
             } else {
                 d.setGroup(null);
             }
