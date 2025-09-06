@@ -1,7 +1,6 @@
 package security.instagram.controller;
 
-import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
+import security.instagram.config.auth.BearerContextHolder;
 import security.instagram.dto.document.DocumentCreateRequest;
 import security.instagram.dto.document.DocumentResponse;
 import security.instagram.dto.document.DocumentUpdateRequest;
@@ -28,25 +27,22 @@ public class DocumentController {
     private final UserRepository users;
 
     @PostMapping
-    public ResponseEntity<DocumentResponse> create(@Valid @RequestBody DocumentCreateRequest req,
-                                                   @AuthenticationPrincipal UserDetails principal) {
-        User me = currentUser(principal);
+    public ResponseEntity<DocumentResponse> create(@Valid @RequestBody DocumentCreateRequest req) {
+        User me = users.findByUsername(BearerContextHolder.getContext().getEmail()).orElseThrow();
         return ResponseEntity.status(201).body(docs.create(req, me));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DocumentResponse> get(@PathVariable String id,
-                                                @AuthenticationPrincipal UserDetails principal) {
-        User me = currentUser(principal);
-        return ResponseEntity.ok(docs.get(UUID.fromString(id), me));
+    public ResponseEntity<DocumentResponse> get(@PathVariable Long id) {
+        User me = users.findByUsername(BearerContextHolder.getContext().getEmail()).orElseThrow();
+        return ResponseEntity.ok(docs.get(id, me));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<DocumentResponse> update(@PathVariable String id,
-                                                   @RequestBody DocumentUpdateRequest req,
-                                                   @AuthenticationPrincipal UserDetails principal) {
-        User me = currentUser(principal);
-        return ResponseEntity.ok(docs.update(UUID.fromString(id), req, me));
+    public ResponseEntity<DocumentResponse> update(@PathVariable Long id,
+                                                   @RequestBody DocumentUpdateRequest req) {
+        User me = users.findByUsername(BearerContextHolder.getContext().getEmail()).orElseThrow();
+        return ResponseEntity.ok(docs.update(id, req, me));
     }
 
     private User currentUser(UserDetails principal) {

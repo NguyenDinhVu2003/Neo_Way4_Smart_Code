@@ -53,8 +53,16 @@ public class Document {
     @Column(nullable = false, length = 16)
     private Visibility visibility;
 
-    @ManyToOne @JoinColumn(name = "group_id")
-    private Group group;
+//    @ManyToOne @JoinColumn(name = "group_id")
+//    private Group group;
+    @Column(name = "group_id")
+    private Long group;
+//
+//    public Long getGroup() {
+//
+//
+//        return groupRepository.findById(group).orElse(null);
+//    }
 
     @ManyToOne(optional = false) @JoinColumn(name = "owner_id", nullable = false)
     private User owner;

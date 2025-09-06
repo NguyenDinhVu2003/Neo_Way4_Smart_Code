@@ -9,7 +9,7 @@ import security.instagram.entity.User;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface GroupMemberRepository extends JpaRepository<GroupMember, UUID> {
+public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> {
     boolean existsByGroupAndUser(Group group, User user);
     Optional<GroupMember> findByGroupAndUser(Group group, User user);
 

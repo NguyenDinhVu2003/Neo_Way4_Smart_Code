@@ -1,9 +1,7 @@
 package security.instagram.repository;
 
-import security.instagram.entity.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
+import security.instagram.entity.Group;
 
-import java.util.UUID;
-
-public interface GroupRepository extends JpaRepository<Group, UUID> {
+public interface GroupRepository extends JpaRepository<Group, Long> {
 }
