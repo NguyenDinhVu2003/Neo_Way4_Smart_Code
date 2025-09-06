@@ -49,8 +49,8 @@ public class SearchController {
         Instant to = createdTo != null ? Instant.parse(createdTo) : null;
         List<Document> filtered = all.getContent().stream()
                 .filter(d -> !Boolean.TRUE.equals(d.getIsDeleted()))
-                .filter(d -> q == null || (contains(d.getTitle(), q) || contains(d.getSummary(), q) || contains(d.getDescription(), q)))
-                .filter(d -> groupId == null || (d.getGroup() != null && d.getGroup().toString().equals(groupId)))
+                .filter(d -> q == null ||  q.isEmpty() || (contains(d.getTitle(), q) || contains(d.getSummary(), q) || contains(d.getDescription(), q)))
+                .filter(d -> groupId == null || groupId.isEmpty() || (d.getGroup() != null && d.getGroup().toString().equals(groupId)))
                 .filter(d -> from == null || !d.getCreatedAt().isBefore(from))
                 .filter(d -> to == null || !d.getCreatedAt().isAfter(to))
                 .filter(d -> perms.canView(d, me))
