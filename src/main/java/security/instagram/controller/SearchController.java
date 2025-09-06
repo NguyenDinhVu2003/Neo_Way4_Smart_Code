@@ -50,7 +50,7 @@ public class SearchController {
         List<Document> filtered = all.getContent().stream()
                 .filter(d -> !Boolean.TRUE.equals(d.getIsDeleted()))
                 .filter(d -> q == null || (contains(d.getTitle(), q) || contains(d.getSummary(), q) || contains(d.getDescription(), q)))
-//                .filter(d -> groupId == null || (d.getGroup() != null && d.getGroup().getId().toString().equals(groupId)))
+                .filter(d -> groupId == null || (d.getGroup() != null && d.getGroup().toString().equals(groupId)))
                 .filter(d -> from == null || !d.getCreatedAt().isBefore(from))
                 .filter(d -> to == null || !d.getCreatedAt().isAfter(to))
                 .filter(d -> perms.canView(d, me))
