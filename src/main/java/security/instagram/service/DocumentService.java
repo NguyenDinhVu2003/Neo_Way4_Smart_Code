@@ -66,9 +66,12 @@ public class DocumentService {
                 break;
             case "image":
             case "png":
+                ft = FileType.IMAGE;
+                break;
             case "jpg":
+                ft = FileType.IMAGE;
+                break;
             case "jpeg":
-            case "gif":
                 ft = FileType.IMAGE;
                 break;
             default:
