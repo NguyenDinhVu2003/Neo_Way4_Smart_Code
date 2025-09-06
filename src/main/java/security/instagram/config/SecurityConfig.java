@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Autowired private CustomAuthEntryPoint customAuthEntryPoint;
-    @Autowired private DecentralizationFilter decentralizationFilter;
+//    @Autowired private DecentralizationFilter decentralizationFilter;
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
             "/swagger-ui/index.html",
